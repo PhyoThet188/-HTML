@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💕 给最爱的你 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 背景动态爱心雨 */
+        .heart-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .falling-heart {
+            position: absolute;
+            top: -20px;
+            font-size: 20px;
+            animation: fall linear infinite;
+            opacity: 0.6;
+            user-select: none;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-20px) rotate(0deg) scale(0.5);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(110vh) rotate(720deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* 主容器 */
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 600px;
+            animation: containerGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes containerGlow {
+            0%, 100% {
+                box-shadow: 0 30px 80px rgba(245, 87, 108, 0.3);
+            }
+            50% {
+                box-shadow: 0 30px 80px rgba(240, 147, 251, 0.5);
+            }
+        }
+
+        /* 标题 */
+        .title {
+            font-size: 2.5rem;
+            color: #fff;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            margin-bottom: 10px;
+            animation: titleFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes titleFloat {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        /* 主按钮 */
+        .love-btn {
+            position: relative;
+            padding: 20px 60px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(245, 87, 108, 0.4);
+            overflow: hidden;
+            letter-spacing: 3px;
+            animation: btnPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes btnPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 10px 40px rgba(245, 87, 108, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 15px 60px rgba(245, 87, 108, 0.6);
+            }
+        }
+
+        .love-btn:hover {
+            transform: scale(1.1) !important;
+            box-shadow: 0 20px 80px rgba(245, 87, 108, 0.6);
+        }
+
+        .love-btn:active {
+            transform: scale(0.95) !important;
+        }
+
+        /* 按钮涟漪效果 */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(0);
+            animation: rippleAnim 0.6s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes rippleAnim {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* 弹出消息 */
+        .love-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 4rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 
+                0 0 30px rgba(245, 87, 108, 0.8),
+                0 0 60px rgba(245, 87, 108, 0.6),
+                0 0 100px rgba(240, 147, 251, 0.4);
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 40px 80px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: none;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .love-message.show {
+            animation: messagePop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes messagePop {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotate(-10deg);
+                opacity: 0;
+            }
+            60% {
+                transform: translate(-50%, -50%) scale(1.2) rotate(3deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .love-message.hide {
+            animation: messageHide 0.5s ease-in forwards;
+        }
+
+        @keyframes messageHide {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0) rotate(20deg);
+                opacity: 0;
+            }
+        }
+
+        /* 爱心粒子（点击后出现） */
+        .heart-particle {
+            position: fixed;
+            pointer-events: none;
+            font-size: 30px;
+            z-index: 999;
+            animation: heartBurst 2s ease-out forwards;
+        }
+
+        @keyframes heartBurst {
+            0% {
+                transform: translate(0, 0) scale(0.5) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* 表情符号装饰 */
+        .emoji-deco {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: emojiSpin 10s linear infinite;
+        }
+
+        @keyframes emojiSpin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* 爱心计数器 */
+        .love-counter {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+            .love-btn {
+                padding: 15px 40px;
+                font-size: 1.3rem;
+            }
+            .love-message {
+                font-size: 2.5rem;
+                padding: 30px 40px;
+                white-space: normal;
+            }
+            .container {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.5rem;
+            }
+            .love-btn {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+            .love-message {
+                font-size: 1.8rem;
+                padding: 20px 25px;
+            }
+        }
+
+        /* 鼠标跟随爱心 */
+        .cursor-heart {
+            position: fixed;
+            pointer-events: none;
+            font-size: 20px;
+            z-index: 9999;
+            animation: cursorHeart 1s ease-out forwards;
+        }
+
+        @keyframes cursorHeart {
+            0% {
+                transform: translate(0, 0) scale(0.5) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--cx), var(--cy)) scale(1.5) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景爱心雨 -->
+    <div class="heart-rain" id="heartRain"></div>
+
+    <!-- 主容器 -->
+    <div class="container">
+        <div class="emoji-deco">💕</div>
+        <h1 class="title">亲爱的老婆</h1>
+        <p class="subtitle">✨ 你是我生命中最美的风景 ✨</p>
+        
+        <button class="love-btn" id="loveBtn">
+            💝 点我 💝
+        </button>
+        
+        <p style="color: rgba(255,255,255,0.6); margin-top: 30px; font-size: 0.9rem;">
+            💖 每一秒都想告诉你 💖
+        </p>
+    </div>
+
+    <!-- 弹出消息 -->
+    <div class="love-message" id="loveMessage">
+        💕 老婆，我爱你 💕
+    </div>
+
+    <!-- 爱心计数器 -->
+    <div class="love-counter">
+        ❤️ 已表白 <span id="countDisplay">0</span> 次
+    </div>
+
+    <script>
+        // 创建爱心雨
+        function createHeartRain() {
+            const container = document.getElementById('heartRain');
+            const hearts = ['❤️', '💕', '💗', '💖', '💝', '✨', '🌸', '🌺'];
+            
+            for (let i = 0; i < 30; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'falling-heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                heart.style.animationDelay = (Math.random() * 5) + 's';
+                container.appendChild(heart);
+            }
+        }
+
+        createHeartRain();
+
+        // 点击按钮事件
+        let count = 0;
+        const loveBtn = document.getElementById('loveBtn');
+        const loveMessage = document.getElementById('loveMessage');
+        const countDisplay = document.getElementById('countDisplay');
+
+        loveBtn.addEventListener('click', function(e) {
+            // 按钮涟漪效果
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+            ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+            this.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 600);
+
+            // 显示消息
+            loveMessage.className = 'love-message';
+            setTimeout(() => {
+                loveMessage.className = 'love-message show';
+            }, 10);
+
+            // 创建爱心粒子
+            createHeartParticles(e.clientX, e.clientY);
+
+            // 更新计数器
+            count++;
+            countDisplay.textContent = count;
+
+            // 自动隐藏消息
+            setTimeout(() => {
+                loveMessage.className = 'love-message hide';
+                setTimeout(() => {
+                    loveMessage.className = 'love-message';
+                }, 500);
+            }, 2500);
+        });
+
+        // 创建爱心粒子爆炸效果
+        function createHeartParticles(cx, cy) {
+            const hearts = ['❤️', '💕', '💗', '💖', '💝', '✨', '🌸'];
+            const colors = ['#ff6b6b', '#ff9f43', '#f368e0', '#ff6b81', '#ff4757', '#ff6348'];
+            
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'heart-particle';
+                particle.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                particle.style.left = cx + 'px';
+                particle.style.top = cy + 'px';
+                particle.style.fontSize = (Math.random() * 30 + 20) + 'px';
+                
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = Math.random() * 300 + 100;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance - 100;
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                particle.style.color = colors[Math.floor(Math.random() * colors.length)];
+                
+                document.body.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 2000);
+            }
+        }
+
+        // 鼠标移动跟随爱心
+        document.addEventListener('mousemove', function(e) {
+            if (Math.random() > 0.9) { // 控制频率
+                const heart = document.createElement('div');
+                heart.className = 'cursor-heart';
+                heart.textContent = ['❤️', '💕', '💗', '✨'][Math.floor(Math.random() * 4)];
+                heart.style.left = e.clientX + 'px';
+                heart.style.top = e.clientY + 'px';
+                heart.style.fontSize = (Math.random() * 15 + 10) + 'px';
+                
+                const cx = (Math.random() - 0.5) * 100;
+                const cy = (Math.random() - 0.5) * 100 - 50;
+                heart.style.setProperty('--cx', cx + 'px');
+                heart.style.setProperty('--cy', cy + 'px');
+                
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 1000);
+            }
+        });
+
+        // 键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                loveBtn.click();
+            }
+        });
+
+        // 页面加载完成后的庆祝效果
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                // 自动显示一次消息
+                loveBtn.click();
+            }, 1500);
+        });
+
+        // 防止页面滚动干扰
+        document.addEventListener('touchmove', function(e) {
+            if (e.target.closest('.container')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+    </script>
+</body>
+</html>
